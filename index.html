@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Casa de Bitches 3.0</title>
+
+  <!-- Include Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+
+  <!-- Your styles -->
+  <style>
+    body {
+      display: flex;
+      margin: 0;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: #7297b0;
+      color: #2a2727;
+      text-align: center;
+      padding: 10px;
+    }
+
+    main {
+      display: flex;
+      flex: 1;
+    }
+
+    #listings {
+      width: 30%;
+      overflow-y: auto;
+      border-right: 1px solid #b07171;
+      padding: 20px;
+    }
+
+    #map {
+      flex: 1;
+      position: relative;
+      height: 500px;
+    }
+
+    #map iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Casa de Bitches 3.0</h1>
+  </header>
+  
+  <main>
+    <div id="listings">
+      <!-- Insert your listing information here -->
+      <h2>Listings</h2>
+      <ul id="listingItems">
+        <!-- Listing items will be dynamically added here -->
+      </ul>
+    </div>
+
+    <!-- Your map container -->
+    <div id="map"></div>
+  </main>
+
+  <!-- Include Leaflet JavaScript -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <!-- Your script to initialize the map -->
+  <script>
+    var map = L.map('map').setView([39.979823, -83.003222], 13);
+
+    // Add a base map layer (you can choose a different tile layer if needed)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Listing and coordinate information
+    var addresses = [
+        { location: [40.02666238280277, -83.08930613243439], name: '3578 Sunset Dr', price: 2600, bedrooms: 4, bathrooms: 2.5 },
+        { location: [39.982259337179435, -83.0074550380364], name: '106 W 2nd Ave', price: 2450, bedrooms: 4, bathrooms: 2 },
+        { location: [40.01753735480641, -83.06336140359866], name: '1909 Inchcliff Rd', price: 2600, bedrooms: 4, bathrooms: 3 },
+        { location: [39.98832831362016, -83.01541626127265], name: '351 W 6th Ave', price: 1500, bedrooms: 4, bathrooms: 1 },
+        { location: [40.046410161618795, -83.03560293243333], name: '4221 Evansdale Rd', price: 2540, bedrooms: 4, bathrooms: 2.5 },
+        { location: [40.02571590077187, -83.040720874762], name: '961 Oberlin Dr', price: 2600, bedrooms: 4, bathrooms: 2.5 },
+        { location: [40.02610730594412, -82.9878915035982], name: '2978 Pontiac St', price: 1350, bedrooms: 4, bathrooms: 1 },
+        { location: [39.98558789963125, -83.01372797476415], name: '313 W 4th Ave', price: 2500, bedrooms: 4, bathrooms: 1.5 },
+        { location: [40.06026631335666, -83.01119683243256], name: '307 E Royal Forest Blvd', price: 1945, bedrooms: 4, bathrooms: 2 },
+        { location: [39.99130066795056, -83.00469483243627], name: '53 Euclid Ave', price: 2450, bedrooms: 4, bathrooms: 2 },
+        { location: [40.00804034546833, -82.99715564592675], name: '457 Alden Ave', price: 1900, bedrooms: 4, bathrooms: 2 },
+
+
+        // Add more addresses as needed
+    ];
+
+    // Function to add markers to the map
+    function addMarkers() {
+      addresses.forEach(function(address) {
+          L.marker(address.location).addTo(map).bindPopup(
+            `${address.name}<br>Price: $${address.price || 'Contact for price'}<br>Bedrooms: ${address.bedrooms || 'N/A'}<br>Bathrooms: ${address.bathrooms || 'N/A'}`
+          );
+      });
+    }
+
+    // Function to sort listings by price
+    function sortListingsByPrice() {
+      addresses.sort(function(a, b) {
+        if (a.price === undefined) return 1; // 'Contact for price' comes last
+        if (b.price === undefined) return -1; // 'Contact for price' comes last
+        return a.price - b.price;
+      });
+
+      // Update the HTML with sorted listings
+      updateListings();
+    }
+
+    // Function to update the listings in the HTML
+    function updateListings() {
+      var listingsContainer = document.getElementById('listingItems');
+      listingsContainer.innerHTML = ''; // Clear existing listings
+
+      addresses.forEach(function(address) {
+        var listItem = document.createElement('li');
+        listItem.innerHTML = `<strong>${address.name}</strong><br>Price: $${address.price || 'Contact for price'}<br>Bedrooms: ${address.bedrooms || 'N/A'}<br>Bathrooms: ${address.bathrooms || 'N/A'}`;
+        listingsContainer.appendChild(listItem);
+      });
+      
+      addMarkers(); // Update markers on the map
+    }
+
+    // Sort listings by price when the page loads
+    sortListingsByPrice();
+  </script>
+</body>
+</html>
+
+
+
+
